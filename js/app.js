@@ -6,7 +6,7 @@ let imageSect=document.getElementById('Section');
 let rightImage=document.getElementById('rightImage');
 let centerImage=document.getElementById('centerImage');
 let leftImage=document.getElementById('leftImage');
-let paragraph=document.getElementById('results');
+
 
 function Products(name, imgExt){
   this.name= name;
@@ -50,35 +50,108 @@ function render(){
   leftImage.alt= Products.all[leftIndex].name;
   Products.all[leftIndex].view++;
 }
-render();
-let numberOfClick=0;
-imageSect.addEventListener('click', function(event){
-  if(numberOfClick< Products.rounds){
-    if (event.target.id !== 'Section'){
-      for(let i=0;i< Products.all.length ;i++){
-        if(Products.all[i].name===event.target.title){
-          Products.all[i].selected++;
-        }
+
+let numberOfClick=25;
+imageSect.addEventListener('click', eventHandler);
+function eventHandler(event){
+  if (event.target.id !== 'Section'){
+    numberOfClick--;
+    for(let i=0;i< Products.all.length ;i++){
+      if(Products.all[i].name===event.target.title){
+        Products.all[i].selected++;
       }
-      render();
     }
-    numberOfClick++;
+    render();
   }
-});
-function clickButt(){
-  let unorderedList=document.createElement('ul');
-  paragraph.appendChild(unorderedList);
-  for(let i=0; i<Products.all.length; i++){
-    let listedItem=document.createElement('li');
-    unorderedList.appendChild(listedItem);
-    listedItem.innerHTML='Products name: '+ Products.all[i].name+'</br>'+' products view: '+Products.all[i].view+'</br>'+
-    '  products selection: '+Products.all[i].selected;
+  if(numberOfClick === 0){
+    imageSect.removeEventListener('click',eventHandler);
+    creatChart();
   }
+
 }
-
-
-
 
 function random(min, max){
   return Math.floor(Math.random()* (max-min+1))+min;
 }
+function creatChart(){
+  let products=[];
+  let views=[];
+  let selected=[];
+  for (let i=0; i<Products.all.length; i++){
+    products.push(Products.all[i].name);
+  }
+  for (let i=0; i<Products.all.length; i++){
+    views.push(Products.all[i].view);
+  }
+  for (let i=0; i<Products.all.length; i++){
+    selected.push(Products.all[i].selected);
+  }
+  let ctx = document.getElementById('myChart').getContext('2d');
+  let chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'bar',
+
+    // The data for our dataset
+    data: {
+      datasets: [{
+        label: 'Votes',
+        data: selected,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(241, 137, 0, 0.801)',
+          'rgba(96, 241, 0, 0.801)',
+          'rgba(241, 0, 221, 0.801)',
+          'rgba(0, 24, 241, 0.801)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(241, 137, 0, 0.801)',
+          'rgba(96, 241, 0, 0.801)',
+          'rgba(241, 0, 221, 0.801)',
+          'rgba(0, 24, 241, 0.801)',
+          'rgba(251, 255, 21, 0.932)'
+        ]
+        // this dataset is drawn below
+
+      }, {
+        label: 'Views',
+        data: views,
+        type: 'bar',
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(241, 137, 0, 0.801)',
+          'rgba(96, 241, 0, 0.801)',
+          'rgba(241, 0, 221, 0.801)',
+          'rgba(0, 24, 241, 0.801)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(241, 137, 0, 0.801)',
+          'rgba(96, 241, 0, 0.801)',
+          'rgba(241, 0, 221, 0.801)',
+          'rgba(0, 24, 241, 0.801)',
+          'rgba(251, 255, 21, 0.932)'
+        ]
+        // this dataset is drawn on top
+      }],
+      labels: products
+    },
+    // Configuration options go here
+    options: {}
+  });
+}
+render();
