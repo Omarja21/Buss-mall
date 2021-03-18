@@ -6,7 +6,7 @@ let imageSect=document.getElementById('Section');
 let rightImage=document.getElementById('rightImage');
 let centerImage=document.getElementById('centerImage');
 let leftImage=document.getElementById('leftImage');
-
+let paragraph=document.getElementById('results');
 
 function Products(name, imgExt){
   this.name= name;
@@ -66,9 +66,33 @@ function eventHandler(event){
   if(numberOfClick === 0){
     imageSect.removeEventListener('click',eventHandler);
     creatChart();
+    saveData();
   }
-
 }
+
+function clickButt(){
+  let unorderedList=document.createElement('ul');
+  paragraph.appendChild(unorderedList);
+  for(let i=0; i<Products.all.length; i++){
+    let listedItem=document.createElement('li');
+    unorderedList.appendChild(listedItem);
+    listedItem.innerHTML='Products name: '+ Products.all[i].name+'</br>'+' products view: '+Products.all[i].view+'</br>'+
+    '  products selection: '+Products.all[i].selected;
+  }
+}
+function saveData(){
+  let data=JSON.stringify(Products.all);
+  localStorage.setItem('test', data);
+}
+function getItem(){
+  let gData=JSON.parse(localStorage.getItem('test'));
+  if (gData){
+    gData=Products.all;
+    clickButt();
+  }
+}
+
+getItem();
 
 function random(min, max){
   return Math.floor(Math.random()* (max-min+1))+min;
